@@ -1,0 +1,13 @@
+{
+  "theme": {"name": "my-cursor-theme", "identifier": "com.example.my-cursor-theme", "author": "Your name", "version": 1, "preview_style": "chibi-anime"},
+  "cursors": {
+    "normal": {"path": "normal.png", "representations": ["normal.png", "normal@2x.png", "normal@5x.png", "normal@10x.png"], "identifier": "com.apple.coregraphics.Arrow", "hotspot": [2, 2]},
+    "text": {"path": "text.png", "representations": ["text.png", "text@2x.png", "text@5x.png", "text@10x.png"], "identifier": "com.apple.coregraphics.IBeam", "hotspot": [16, 16]},
+    "action": {"path": "action.png", "representations": ["action.png", "action@2x.png", "action@5x.png", "action@10x.png"], "identifier": "com.apple.cursor.13", "hotspot": [20, 5]},
+    "forbidden": {"path": "forbidden.png", "representations": ["forbidden.png", "forbidden@2x.png", "forbidden@5x.png", "forbidden@10x.png"], "identifier": "com.apple.cursor.3", "hotspot": [16, 16]},
+    "busy": {"path": "busy.png", "representations": ["busy.png", "busy@2x.png", "busy@5x.png", "busy@10x.png"], "identifier": "com.apple.cursor.4", "hotspot": [16, 16]},
+    "open_hand": {"path": "open_hand.png", "representations": ["open_hand.png", "open_hand@2x.png", "open_hand@5x.png", "open_hand@10x.png"], "identifier": "com.apple.cursor.12", "hotspot": [16, 16]},
+    "resize_horizontal": {"path": "resize_horizontal.png", "representations": ["resize_horizontal.png", "resize_horizontal@2x.png", "resize_horizontal@5x.png", "resize_horizontal@10x.png"], "identifier": "com.apple.cursor.19", "hotspot": [16, 16]},
+    "resize_vertical": {"path": "resize_vertical.png", "representations": ["resize_vertical.png", "resize_vertical@2x.png", "resize_vertical@5x.png", "resize_vertical@10x.png"], "identifier": "com.apple.cursor.23", "hotspot": [16, 16]}
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mouse Pointer Theme Maker"
+  short_description: "Create an eight-state pointer theme for macOS or Windows."
+  default_prompt: "Use $mouse-pointer-theme-maker. First ask whether my computer is macOS or Windows, introduce retro-pixel, chibi-anime, and abstract-expression, and ask what character/theme I want; then show a high-resolution PNG card preview first and package only my platform after explicit approval."

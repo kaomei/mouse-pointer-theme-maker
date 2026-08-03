@@ -1,0 +1,19 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+
+# Generated theme outputs and third-party downloads
+outputs/
+*.cape
+*.cur
+Mousecape*.zip
+*.app/
+
+# Internal image-generation and editable preview sources
+**/*-magenta.png
+**/*-alpha.png
+**/source-sheet.png
+**/preview.svg
+
+# Local release archives
+*.zip
