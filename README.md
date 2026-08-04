@@ -2,9 +2,17 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Português (Brasil)](README.pt-BR.md)
 
-Turn a character, mascot, or visual idea into a complete mouse pointer theme for macOS or Windows—with a polished preview before anything is installed.
+**Your favorite character shouldn't stay trapped in a picture. Put them under your fingertips.**
 
-**Three art directions · Eight practical states · One platform-specific package**
+Turn a mascot, original IP, anime-inspired character, or even a half-formed visual idea into a complete mouse pointer theme for macOS or Windows—designed state by state, previewed in HD, and packaged only after you love the result.
+
+**Choose a character. Pick a style. Get an entire pointer world built around it.**
+
+✦ **3 distinctive art styles · 8 expressive states · macOS & Windows**
+✦ Upload a reference image—or simply name the character you have in mind
+✦ See the complete high-resolution preview before receiving any installation files
+
+From sleepy pixel mascots and adorable chibi characters to wildly expressive visual jokes, every pointer is designed to feel like part of the character—not a picture awkwardly pasted onto an arrow.
 
 ## Featured themes
 
