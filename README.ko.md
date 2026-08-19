@@ -1,6 +1,6 @@
 # Mouse Pointer Theme Maker
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Português (Brasil)](README.pt-BR.md)
+[简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Português (Brasil)](README.pt-BR.md)
 
 캐릭터, 오리지널 IP 또는 시각적 아이디어를 macOS / Windows용 완성형 마우스 포인터 테마로 만듭니다. 설치 전에 항상 고해상도 전체 미리보기를 먼저 확인합니다.
 
