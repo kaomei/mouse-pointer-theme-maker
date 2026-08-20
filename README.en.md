@@ -26,14 +26,6 @@ Ideal for: **desktop personalization, original IP merchandise, custom creator cu
 
 ---
 
-## ⚠️ Disclaimer & Copyright Notice
-
-1. **Non-Official Project**: `mouse-pointer-theme-maker` is an open-source AI prompt engineering and asset creation tool. **It has no commercial affiliation, sponsorship, or official endorsement from any animation, gaming, or entertainment companies**.
-2. **Intellectual Property**: All character names, images, and derivative concepts referenced in examples belong to their respective copyright and trademark owners.
-3. **Intended Use**: This Skill is provided for personal learning, technical research, AI generative art exploration, and **non-commercial personal desktop customization**. Do not use copyrighted character assets for commercial distribution.
-
----
-
 ## ✨ Key Features
 
 - 🎨 **3 Distinctive Art Directions**: `retro-pixel`, `chibi-anime`, and `abstract-expression`—integrating characters deeply into functional cursor semantics rather than awkwardly pasting images onto arrows.
@@ -188,6 +180,14 @@ mouse-pointer-theme-maker/
 ├── tests/        # Contract and unit test suite
 └── SKILL.md      # Skill workflow definition
 ```
+
+---
+
+## ⚠️ Disclaimer & Copyright Notice
+
+1. **Non-Official Project**: `mouse-pointer-theme-maker` is an open-source AI prompt engineering and asset creation tool. **It has no commercial affiliation, sponsorship, or official endorsement from any animation, gaming, or entertainment companies**.
+2. **Intellectual Property**: All character names, images, and derivative concepts referenced in examples belong to their respective copyright and trademark owners.
+3. **Intended Use**: This Skill is provided for personal learning, technical research, AI generative art exploration, and **non-commercial personal desktop customization**. Do not use copyrighted character assets for commercial distribution.
 
 ---
 
