@@ -1,6 +1,6 @@
 <div align="center">
 
-[简体中文](README.md) · [**English**](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Português (Brasil)](README.pt-BR.md)
+[简体中文](README.md) · [**English**](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md)
 
 # 🖱️ Mouse Pointer Theme Maker
 
@@ -16,7 +16,7 @@ An open-source AI Skill for creators and desktop aesthetics enthusiasts. Turn a 
 
 <br/>
 
-<img src="examples/kaomeier-chibi-anime/preview.png" alt="Mouse Pointer Theme Maker Showcase Preview" width="800">
+<img src="assets/readme/hero-cover.png" alt="Mouse Pointer Theme Maker Cover Preview" width="800">
 
 <br/>
 
@@ -173,7 +173,7 @@ Theme: Turn my blue mascot reference into a complete pointer theme.
 ```text
 mouse-pointer-theme-maker/
 ├── agents/       # Codex UI metadata
-├── assets/       # Manifest template
+├── assets/       # Manifest template and cover assets
 ├── examples/     # Curated high-resolution theme previews
 ├── references/   # Style, state, platform, and installation guides
 ├── scripts/      # Preview, package, validation, and conversion tools

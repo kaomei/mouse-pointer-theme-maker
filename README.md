@@ -1,6 +1,6 @@
 <div align="center">
 
-[**简体中文**](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Português (Brasil)](README.pt-BR.md)
+[**简体中文**](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md)
 
 # 🖱️ Mouse Pointer Theme Maker (鼠标指针主题制作器)
 
@@ -16,7 +16,7 @@
 
 <br/>
 
-<img src="examples/kaomeier-chibi-anime/preview.png" alt="鼠标指针主题制作器精选预览" width="800">
+<img src="assets/readme/hero-cover.png" alt="鼠标指针主题制作器精选封面" width="800">
 
 <br/>
 
@@ -173,7 +173,7 @@ cp -R . ~/.gemini/config/skills/mouse_pointer_theme_maker
 ```text
 mouse-pointer-theme-maker/
 ├── agents/       # Codex UI 交互元数据
-├── assets/       # Manifest 主题清单模板
+├── assets/       # Manifest 主题清单模板与封面资源
 ├── examples/     # 经典精选主题超清预览画廊
 ├── references/   # 画风、状态映射、安装教程与平台规范文档
 ├── scripts/      # 预览生成、Cape 打包、Windows Cur 转换与校验工具集
