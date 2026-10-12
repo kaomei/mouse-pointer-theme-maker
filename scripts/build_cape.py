@@ -318,104 +318,24 @@ def write_preview(manifest: dict[str, Any], manifest_dir: Path, output_path: Pat
     return output_path
 
 
-def _preview_font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
-    """Use a macOS CJK font when available, with a portable fallback for tests."""
-    candidates = (
-        Path("/System/Library/Fonts/STHeiti Medium.ttc" if bold else "/System/Library/Fonts/STHeiti Light.ttc"),
-        Path("/System/Library/Fonts/Hiragino Sans GB.ttc"),
-        Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
-    )
-    for candidate in candidates:
-        if candidate.is_file():
-            try:
-                return ImageFont.truetype(str(candidate), size)
-            except OSError:
-                continue
-    return ImageFont.load_default()
+def _preview_font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
+    """Resolve a readable cross-platform CJK preview font."""
+    from preview_design import font_path
+
+    return ImageFont.truetype(str(font_path(bold)), size)
 
 
 def write_preview_png(manifest: dict[str, Any], manifest_dir: Path, output_path: Path) -> Path:
-    """Write the user-facing card preview as a crisp 2x PNG raster image.
+    """Render the typography-led card layout from validated cursor resources."""
+    from preview_design import render
 
-    The SVG remains an internal, editable layout source. This function is the
-    delivery format so a preview can be opened directly in Finder, chat, or a
-    browser without relying on SVG support.
-    """
     all_records = _validate_manifest(manifest, manifest_dir)
     by_state = {state: (cursor, image_data) for state, cursor, image_data in all_records}
     records = [(state, *by_state[state]) for state in PREVIEW_STATE_ORDER if state in by_state]
     if not records:
         raise ValueError("manifest does not contain previewable cursor states")
     _validate_preview_safe_borders(records)
-
-    preview_style = manifest["theme"].get("preview_style", "chibi-anime")
-    palette = PREVIEW_PALETTES.get(str(preview_style), PREVIEW_PALETTES["chibi-anime"])
-    scale = 2
-    margin, gap, card_width, card_height, header_height = (value * scale for value in (48, 28, 260, 238, 142))
-    image_size = 132 * scale
-    columns = 4
-    rows = max(1, (len(records) + columns - 1) // columns)
-    width = margin * 2 + columns * card_width + (columns - 1) * gap
-    height = header_height + rows * card_height + max(0, rows - 1) * gap + 48 * scale
-
-    image = Image.new("RGBA", (width, height), palette["background"])
-    draw = ImageDraw.Draw(image)
-    # Keep the same soft decorative washes as the SVG card, at native 2x.
-    wash = palette["wash"]
-    draw.ellipse((width - 160 * scale, -18 * scale, width - 8 * scale, 134 * scale), fill=wash)
-    draw.ellipse((-28 * scale, height - 176 * scale, 196 * scale, height + 48 * scale), fill=wash)
-    title_font = _preview_font(35 * scale, bold=True)
-    subtitle_font = _preview_font(16 * scale)
-    draw.text((margin, 24 * scale), f'{manifest["theme"]["name"]} 鼠标皮肤', font=title_font, fill=palette["ink"])
-    draw.text((margin, 76 * scale), f"状态预览 · {len(records)} 个常用状态 · 红色十字为热点", font=subtitle_font, fill=palette["ink"])
-    button_box = (width - margin - 132 * scale, 42 * scale, width - margin, 84 * scale)
-    draw.rounded_rectangle(button_box, radius=21 * scale, fill=palette["accent"])
-    button_font = _preview_font(14 * scale, bold=True)
-    button_text = "请确认后打包"
-    bbox = draw.textbbox((0, 0), button_text, font=button_font)
-    draw.text(((button_box[0] + button_box[2] - (bbox[2] - bbox[0])) // 2, 52 * scale), button_text, font=button_font, fill="#FFFFFF")
-
-    label_font = _preview_font(20 * scale, bold=True)
-    note_font = _preview_font(11 * scale)
-    code_font = _preview_font(13 * scale)
-    number_font = _preview_font(12 * scale, bold=True)
-    for index, (state, cursor, image_data) in enumerate(records):
-        column = index % columns
-        row = index // columns
-        x = margin + column * (card_width + gap)
-        y = header_height + row * (card_height + gap)
-        draw.rounded_rectangle((x + 3 * scale, y + 5 * scale, x + card_width + 3 * scale, y + card_height + 5 * scale), radius=24 * scale, fill="#4A24201A")
-        draw.rounded_rectangle((x, y, x + card_width, y + card_height), radius=24 * scale, fill=palette["card"], outline=palette["accent"] + "48", width=2 * scale)
-        draw.rounded_rectangle((x + 18 * scale, y + 16 * scale, x + 58 * scale, y + 44 * scale), radius=14 * scale, fill=palette["wash"])
-        number = f"{index + 1:02}"
-        nb = draw.textbbox((0, 0), number, font=number_font)
-        draw.text((x + 38 * scale - (nb[2] - nb[0]) / 2, y + 19 * scale), number, font=number_font, fill=palette["ink"])
-        draw.text((x + 76 * scale, y + 18 * scale), state, font=code_font, fill="#7A5260")
-        draw.ellipse((x + card_width - 44 * scale, y + 22 * scale, x + card_width - 26 * scale, y + 40 * scale), fill=palette["accent"] + "38")
-
-        cursor_image = Image.open(BytesIO(image_data[-1])).convert("RGBA")
-        cursor_image.thumbnail((image_size, image_size), Image.Resampling.LANCZOS)
-        image_x, image_y = x + (card_width - image_size) // 2, y + 42 * scale
-        paste_x = image_x + (image_size - cursor_image.width) // 2
-        paste_y = image_y + (image_size - cursor_image.height) // 2
-        image.alpha_composite(cursor_image, (paste_x, paste_y))
-        hotspot_x = image_x + cursor["hotspot"][0] * image_size / CURSOR_SIZE
-        hotspot_y = image_y + cursor["hotspot"][1] * image_size / CURSOR_SIZE
-        red = "#E44A55"
-        draw.ellipse((hotspot_x - 7 * scale, hotspot_y - 7 * scale, hotspot_x + 7 * scale, hotspot_y + 7 * scale), fill="#E44A5520", outline=red, width=2 * scale)
-        draw.line((hotspot_x - 11 * scale, hotspot_y, hotspot_x + 11 * scale, hotspot_y), fill=red, width=2 * scale)
-        draw.line((hotspot_x, hotspot_y - 11 * scale, hotspot_x, hotspot_y + 11 * scale), fill=red, width=2 * scale)
-
-        label = PREVIEW_LABELS.get(state, state.replace("_", " "))
-        lb = draw.textbbox((0, 0), label, font=label_font)
-        draw.text((x + (card_width - (lb[2] - lb[0])) / 2, y + 181 * scale), label, font=label_font, fill="#321F2B")
-        note = "红色十字为实际点击位置"
-        tb = draw.textbbox((0, 0), note, font=note_font)
-        draw.text((x + (card_width - (tb[2] - tb[0])) / 2, y + 208 * scale), note, font=note_font, fill="#A27B85")
-
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    image.save(output_path, format="PNG", optimize=True)
-    return output_path
+    return render(manifest, manifest_dir, records, output_path, PREVIEW_LABELS)
 
 
 def main() -> int:
