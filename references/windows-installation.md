@@ -1,6 +1,6 @@
 # Windows 10/11 installation
 
-The Windows package contains 15 static `.cur` files and two PowerShell scripts. It does not use Mousecape and does not require administrator permission.
+The Windows package contains 15 `.cur` files and two PowerShell scripts. Each `.cur` includes the validated 32×32 resource and, when the source manifest has a valid 2x file, a 64×64 resource for high-DPI selection. It does not use Mousecape and does not require administrator permission.
 
 ## Install
 

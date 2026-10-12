@@ -12,6 +12,8 @@ WINDOWS_BUILDER_PATH = Path(__file__).resolve().parents[1] / "scripts" / "build_
 ESSENTIAL_MANIFEST_PATH = Path(__file__).resolve().parents[1] / "assets" / "essential-theme-manifest.json"
 WINDOWS_INSTALLATION_PATH = Path(__file__).resolve().parents[1] / "references" / "windows-installation.md"
 COMPLETE_TUTORIAL_PATH = Path(__file__).resolve().parents[1] / "references" / "complete-tutorial.md"
+VISUAL_QUALITY_GATE_PATH = Path(__file__).resolve().parents[1] / "references" / "visual-quality-gate.md"
+REQUEST_BUDGET_PATH = Path(__file__).resolve().parents[1] / "references" / "request-budget.md"
 
 
 class SkillContractTests(unittest.TestCase):
@@ -137,6 +139,71 @@ class SkillContractTests(unittest.TestCase):
             "HKCU",
         ):
             self.assertIn(required_section, tutorial)
+
+    def test_skill_rejects_static_character_sticker_generation(self) -> None:
+        skill = SKILL_PATH.read_text(encoding="utf-8")
+        gate = VISUAL_QUALITY_GATE_PATH.read_text(encoding="utf-8")
+
+        self.assertIn("eight separate image-generation jobs", skill)
+        self.assertIn("Reusing the same standing portrait", skill)
+        self.assertIn("must never substitute a static reference-image cutout", skill)
+        self.assertIn("Do not show a knowingly failed draft", skill)
+        self.assertIn("same static character pose", gate)
+        self.assertIn("small mascot sticker", gate)
+        self.assertIn("all eight are `PASS`", gate)
+        self.assertIn("one prompt per state", gate)
+        self.assertIn("35-60%", gate)
+        self.assertIn("strict character identity reference", gate)
+
+    def test_skill_handles_oversized_generation_requests_without_retry_loops(self) -> None:
+        skill = SKILL_PATH.read_text(encoding="utf-8")
+        budget = REQUEST_BUDGET_PATH.read_text(encoding="utf-8")
+        self.assertTrue(REQUEST_BUDGET_PATH.is_file())
+        for required in (
+            "Request-size budget and 413 recovery",
+            "HTTP 413 Payload Too Large",
+            "stop retrying the identical request",
+            "do not serialize images or files as Base64",
+            "compact recovery turn",
+            "If it fails with 413 again, stop",
+        ):
+            self.assertIn(required, skill + budget)
+
+    def test_skill_fails_closed_when_generation_output_is_empty_or_invisible(self) -> None:
+        skill = SKILL_PATH.read_text(encoding="utf-8")
+        for required in (
+            "Generation output handshake (fail closed)",
+            "non-empty image result",
+            "GENERATION_UNAVAILABLE",
+            "do not render a preview card",
+            "newly written file under the configured `$CODEX_HOME/generated_images` directory",
+            "printed absolute `preview_png` path exists",
+        ):
+            self.assertIn(required, skill)
+
+    def test_skill_detects_stale_installations_before_generation(self) -> None:
+        skill = SKILL_PATH.read_text(encoding="utf-8")
+        for marker in (
+            "eight separate image-generation jobs",
+            "visual-quality-gate.md",
+            "HTTP 413 Payload Too Large",
+            "reinstall/update the Skill",
+        ):
+            self.assertIn(marker, skill)
+
+    def test_visual_quality_gate_defines_unique_state_performances(self) -> None:
+        gate = VISUAL_QUALITY_GATE_PATH.read_text(encoding="utf-8")
+        for state in (
+            "normal",
+            "text",
+            "action",
+            "forbidden",
+            "busy",
+            "open_hand",
+            "resize_horizontal",
+            "resize_vertical",
+        ):
+            self.assertIn(f"`{state}`", gate)
 
 
 if __name__ == "__main__":
