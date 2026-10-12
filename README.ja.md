@@ -1,86 +1,103 @@
-# Mouse Pointer Theme Maker
+<div align="center">
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Português (Brasil)](README.pt-BR.md)
+[简体中文](README.md) · [English](README.en.md) · [**日本語**](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md)
 
-キャラクター、オリジナル IP、またはイメージを、macOS / Windows 用の完全なマウスポインターテーマに変換します。インストール前に、必ず高解像度プレビューを確認できます。
+# 🖱️ Mouse Pointer Theme Maker (マウスポインターテーマ作成器)
 
-**3つのスタイル · 実用的な8状態 · OS別パッケージ**
+### 推しキャラを指先に。AI で macOS / Windows 向けの高クオリティなカスタムカーソルを一発制作。
 
-## テーマギャラリー
+クリエイターやデスクトップカスタマイズ愛好家のためのオープンソース AI Skill。キャラクター名、オリジナルマスコット、または参考画像を入力するだけで、3大アートスタイル・実用的な8大機能状態の高解像度マウスポインターテーマを生成。macOS (.cape) および Windows (.cur) のネイティブ形式で納品します。
 
-### Kaozai · レトロピクセル
+![Codex Skill](https://img.shields.io/badge/Codex-Skill-111827?style=flat-square)
+![対応OS](https://img.shields.io/badge/対応OS-macOS%20%7C%20Windows-0066ff?style=flat-square)
+![3大スタイル](https://img.shields.io/badge/スタイル-3大アートスタイル-f59e0b?style=flat-square)
+![8大状態](https://img.shields.io/badge/状態-8大機能カーソル-8b5cf6?style=flat-square)
+![MIT License](https://img.shields.io/badge/License-MIT-16a34a?style=flat-square)
 
-単純なピクセル化フィルターではなく、16/32-bit ゲーム素材として再設計した作品です。
+<br/>
 
-![Kaozai レトロピクセル 8状態テーマ](examples/kaozai-retro-pixel/preview.png)
+<img src="assets/readme/hero-cover.png" alt="マウスポインターテーマ作成器 カバープレビュー" width="800">
 
-### Kaomeier · ちびアニメ
+<br/>
 
-青いクマ帽子、ライトブルーの三つ編み、制服を活かした、表情豊かな Q 版セットです。
+適用シーン：**デスクトップ美化、二次元・オリジナルキャラクターグッズ、配信者・VTuber専用カーソル、デジタルギフト**。
 
-![Kaomeier ちびアニメ 8状態テーマ](examples/kaomeier-chibi-anime/preview.png)
+</div>
 
-### Palace Drama · アブストラクト表現
+---
 
-誇張、視覚的メタファー、シュールなユーモアを使った表現スタイルです。
+## ✨ 主な特徴
 
-![宮廷ドラマ アブストラクト表現 8状態テーマ](examples/zhenhuan-abstract-expression/preview.png)
+- 🎨 **3つの独自アートスタイル**：`retro-pixel`（レトロピクセル）、`chibi-anime`（ちびアニメ）、`abstract-expression`（アブストラクト表現）。
+- 🎯 **日常で使う8大機能状態を網羅**：通常選択、テキスト入力、リンククリック、操作不可、処理中、キャンバス移動、左右リサイズ、上下リサイズ。
+- 🖼️ **2440×1388 超高解像度プレビュー**：「プレビューを確認し、満足してからパッケージ化」の原則。320×320 ソース素材からレンダリングし、赤い十字でホットスポット（Hotspot）を明示。
+- 💻 **macOS & Windows ネイティブ対応**：
+  - **macOS**：`.cape` テーマパッケージを生成。Mousecape SwiftUI に完全対応（51個のシステム Identifier へ自動拡張）。
+  - **Windows**：15個の標準 `.cur` ファイルとワンクリックインストール・復元用 PowerShell スクリプト（管理者権限不要）。
+- 🔍 **正確なホットスポット位置合わせと透明余白保護**。
 
-> 赤い十字はホットスポット確認用です。実際のポインター画像には含まれません。
+---
 
-## 使い方
+## 🎬 テーマギャラリー (Theme Showcase)
 
-1. **macOS** または **Windows 10/11** を選択。
-2. キャラクター名、オリジナル画像、参考画像とスタイルを指定。
-3. 8状態をまとめた高解像度 PNG を確認。
-4. 承認後、選択した OS のパッケージだけを受け取る。
+### 🎮 Kaozai · レトロピクセル (Retro Pixel)
+<div align="center">
+  <img src="examples/kaozai-retro-pixel/preview.png" alt="Kaozai レトロピクセル 8状態テーマ" width="750">
+</div>
 
-承認前に `.cape`、`.cur`、インストールアーカイブは作成しません。
+### 🐻 Kaomeier · ちびアニメ (Chibi Anime)
+<div align="center">
+  <img src="examples/kaomeier-chibi-anime/preview.png" alt="Kaomeier ちびアニメ 8状態テーマ" width="750">
+</div>
 
-## 3つのスタイル
+### 🎭 宮廷ドラマ · アブストラクト表現 (Abstract Expression)
+<div align="center">
+  <img src="examples/zhenhuan-abstract-expression/preview.png" alt="宮廷ドラマ アブストラクト表現 8状態テーマ" width="750">
+</div>
 
-| スタイル | 内容 |
-| --- | --- |
-| `retro-pixel` | 輪郭と色面を意図的に設計した 16/32-bit ピクセルアート |
-| `chibi-anime` | 大きな表情、きれいな線、統一アクセサリーのちびキャラ |
-| `abstract-expression` | 誇張、視覚的メタファー、シュールな笑い、ミーム的反応 |
+---
 
-8つの基本状態は `normal`、`text`、`action`、`forbidden`、`busy`、`open_hand`、`resize_horizontal`、`resize_vertical` です。これらは macOS の51識別子と Windows の15役割に展開されます。
+## 🛠️ 制作ワークフロー
 
-## Codex Skill のインストール
+```mermaid
+flowchart LR
+    A[1. OSと画風を選択] --> B[2. キャラ名・参考画像を入力]
+    B --> C[3. 8状態の超高画質プレビューを生成]
+    C --> D[4. ホットスポットとデザインを確認]
+    D --> E[5. 承認後にインストールパッケージを出力]
+```
+
+---
+
+## 📦 インストールと使い方
 
 ```bash
 git clone https://github.com/kaomei/mouse-pointer-theme-maker.git
-mkdir -p ~/.codex/skills
-cp -R mouse-pointer-theme-maker ~/.codex/skills/mouse-pointer-theme-maker
+cd mouse-pointer-theme-maker
+
+# Codex
+cp -R . "${CODEX_HOME:-$HOME/.codex}/skills/mouse-pointer-theme-maker"
+
+# Antigravity / Gemini CLI
+cp -R . ~/.gemini/config/skills/mouse_pointer_theme_maker
 ```
 
-Codex を再起動し、次のように依頼します。
+---
 
-```text
-Use $mouse-pointer-theme-maker.
-Computer: macOS
-Style: chibi-anime
-Theme: この参考キャラクターを完全なポインターテーマにしてください。
-```
+## ⚠️ 免責事項および著作権に関するお知らせ (Disclaimer)
 
-## OS別出力
+1. **非公式プロジェクト**：本プロジェクトはオープンソースのプロンプトエンジニアリング・制作ツールであり、記載されたいかなる企業・版権元とも商業的提携関係はありません。
+2. **知的財産権の帰属**：例示されているキャラクターや商標の権利は、それぞれの原著作者に帰属します。
+3. **利用範囲**：個人の学習、研究、非営利目的のデスクトップ美化にご利用ください。
 
-macOS では承認済み画像を `.cape` にします。適用には第三者製の [Mousecape SwiftUI Releases](https://github.com/sdmj76/Mousecape-swiftUI/releases) が必要です。本リポジトリは Mousecape アプリを同梱・再配布しません。商用利用を含め、Mousecape 側のライセンスを確認してください。
+---
 
-Windows では15個の `.cur`、現在ユーザー用の PowerShell インストーラー、復元スクリプトを生成します。管理者権限は不要です。
+## 🤝 コントリビューション
 
-## 品質と制限
+PR や Issue での新しいテーマや改善提案を歓迎します！
 
-- プレビューは 2440×1388 以上の PNG。
-- 32×32 を拡大せず、320×320 の元画像からカードを生成。
-- ホットスポットと透明な安全余白を検証。
-- macOS と Windows は別々に出力。
-- アプリによっては独自ポインターを描画するため、一部状態が表示されない場合があります。
-- 権利を持つ画像だけを公開してください。キャラクター名の指定は公式許諾を意味しません。
+このプロジェクトが役に立ちましたら、**ぜひ Star ⭐️ をつけて kaomei（烤妹儿）を応援してください！**
 
-## Contribution / License
+## 📄 ライセンス
 
-Issue と Pull Request を歓迎します。第三者アプリのバイナリを追加せず、`python3 -m unittest discover -s tests -v` を実行してください。
-
-Skill のソースコードは [MIT License](LICENSE) です。サンプルキャラクター画像は各制作者の権利に従い、機能デモとしてのみ掲載されています。
+[MIT License](LICENSE) © 2026 [kaomei](https://github.com/kaomei)
