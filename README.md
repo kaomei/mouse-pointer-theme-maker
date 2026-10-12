@@ -111,6 +111,10 @@ flowchart LR
 
 ---
 
+## 新版预览排版 · 1.1.1
+
+默认采用粗黑体标题、放大的角色插画、轻阴影卡片与统一热点说明。多角色主题可显示「角色名＋中文状态」，英文标识为辅助信息。预览为 2440×1600 PNG，优先使用同画布的高清原稿；字体自动适配 macOS、Windows 或 Linux，长标题自动缩小避免遮挡。
+
 ## 📦 安装与使用 (Installation & Quick Start)
 
 ### 1. 安装 Skill 至你的 AI 环境
@@ -121,7 +125,7 @@ flowchart LR
 
 Skill 提供创作流程和打包脚本，**不会自动开通生图能力**。你的 Codex 会话需要可用的图片生成工具，支持参考图输入和图片文件输出；仅接入聊天模型或兼容 Responses API 的服务不代表可以生图。缺少工具时，Skill 会明确停止，不用原图贴纸或脚本绘图冒充生成效果。
 
-本次修正版为 **1.1.0**。它逐状态重绘，以第一张合格作品固定画风；工具允许时按 2–3 张小批量并行，失败只重做对应状态，已完成文件可继续使用。出图耗时取决于生图服务，无法保证固定时长。不同模型的审美效果也可能不同，示例图不代表每次都会生成相同作品。
+本次修正版为 **1.1.1**。它逐状态重绘，以第一张合格作品固定画风；工具允许时按 2–3 张小批量并行，失败只重做对应状态，已完成文件可继续使用。出图耗时取决于生图服务，无法保证固定时长。不同模型的审美效果也可能不同，示例图不代表每次都会生成相同作品。
 
 本地缩放、预览和打包需要 Python 3 与 Pillow：`python3 -m pip install Pillow`；Windows 可使用 `py -3 -m pip install Pillow`。
 
@@ -132,7 +136,7 @@ cd mouse-pointer-theme-maker
 
 如果之前装过旧版本，不要直接把新旧文件夹合并。先把 `~/.codex/skills/mouse-pointer-theme-maker` 移到 skills 目录之外备份，再复制新版本；这样不会残留旧的 Skill 规则。重新启动 Codex 后，确认 Skill 文件中包含“eight separate image-generation jobs”和“HTTP 413 Payload Too Large”。
 
-如果旧版名为 `macos-cursor-skin`，也应将其移到 skills 目录之外备份，避免两个版本同时触发。**不要只在 skills 内改名备份**：备份目录仍含 `SKILL.md` 时可能继续被发现。Windows 的技能目录通常是 `%USERPROFILE%\.codex\skills`，更新时同样先把旧版移到该目录之外，再复制新版本。检查实际加载的 `SKILL.md` 包含版本 `1.1.0`。
+如果旧版名为 `macos-cursor-skin`，也应将其移到 skills 目录之外备份，避免两个版本同时触发。**不要只在 skills 内改名备份**：备份目录仍含 `SKILL.md` 时可能继续被发现。Windows 的技能目录通常是 `%USERPROFILE%\.codex\skills`，更新时同样先把旧版移到该目录之外，再复制新版本。检查实际加载的 `SKILL.md` 包含版本 `1.1.1`。
 
 复制到对应的 skills 目录：
 

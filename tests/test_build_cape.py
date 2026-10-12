@@ -131,7 +131,7 @@ class BuildCapeTests(unittest.TestCase):
             png = output.read_bytes()
 
         self.assertTrue(png.startswith(b"\x89PNG\r\n\x1a\n"))
-        self.assertEqual(struct.unpack(">II", png[16:24]), (2440, 856))
+        self.assertEqual(struct.unpack(">II", png[16:24]), (2440, 1600))
 
 
     def test_write_preview_uses_the_largest_retina_artwork_instead_of_upscaling_1x(self) -> None:
