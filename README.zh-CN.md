@@ -53,11 +53,23 @@
 
 ## 安装 Codex Skill
 
+### 使用前先检查
+
+Skill 提供创作流程和打包脚本，**不会自动开通生图能力**。你的 Codex 会话需要可用的图片生成工具，支持参考图输入和图片文件输出；仅接入聊天模型或兼容 Responses API 的服务不代表可以生图。缺少工具时，Skill 会明确停止，不用原图贴纸或脚本绘图冒充生成效果。
+
+本次修正版为 **1.1.0**。它逐状态重绘，以第一张合格作品固定画风；工具允许时按 2–3 张小批量并行，失败只重做对应状态，已完成文件可继续使用。出图耗时取决于生图服务，无法保证固定时长。不同模型的审美效果也可能不同，示例图不代表每次都会生成相同作品。
+
+本地缩放、预览和打包需要 Python 3 与 Pillow：`python3 -m pip install Pillow`；Windows 可使用 `py -3 -m pip install Pillow`。
+
 ```bash
 git clone https://github.com/kaomei/mouse-pointer-theme-maker.git
 mkdir -p ~/.codex/skills
 cp -R mouse-pointer-theme-maker ~/.codex/skills/mouse-pointer-theme-maker
 ```
+
+如果之前装过旧版本，不要直接把新旧文件夹合并。先把 `~/.codex/skills/mouse-pointer-theme-maker` 移到 skills 目录之外备份，再复制新版本；这样不会残留旧的 Skill 规则。重新启动 Codex 后，确认 Skill 文件中包含“eight separate image-generation jobs”和“HTTP 413 Payload Too Large”。
+
+如果旧版名为 `macos-cursor-skin`，也应将其移到 skills 目录之外备份，避免两个版本同时触发。**不要只在 skills 内改名备份**：备份目录仍含 `SKILL.md` 时可能继续被发现。Windows 的技能目录通常是 `%USERPROFILE%\.codex\skills`，更新时同样先把旧版移到该目录之外，再复制新版本。检查实际加载的 `SKILL.md` 包含版本 `1.1.0`。
 
 重新启动 Codex，然后可以这样说：
 
@@ -78,7 +90,7 @@ Skill 会先问电脑平台，介绍三种画风，再确认角色和主题；�
 
 ### Windows
 
-确认后的图案会打包为 15 个 `.cur` 文件，并提供当前用户安装脚本和恢复脚本。安装脚本只写入 `HKCU\Control Panel\Cursors`，不需要管理员权限。
+确认后的图案会打包为 15 个 `.cur` 文件；每个文件优先包含 32×32 与 64×64 两个清晰尺寸，并提供当前用户安装脚本和恢复脚本。安装脚本只写入 `HKCU\Control Panel\Cursors`，不需要管理员权限。
 
 ## 质量保证
 
@@ -90,6 +102,9 @@ Skill 会先问电脑平台，介绍三种画风，再确认角色和主题；�
 - 用户参考图、下载的应用程序和生成的安装包不会进入公开仓库。
 
 ## 已知限制
+
+- 运行记录 `generation-record.json` 会记录版本、实际生图工具、状态文件和审阅结果，便于排查“没有图片”和“效果不同”；不会记录密钥或整段聊天。
+- 文件测试能验证尺寸、热点和打包格式，不能代替审美检查，也不能证明所有第三方生图服务兼容。
 
 - 有些软件会绘制自己的鼠标，或始终调用普通箭头。
 - 忙碌、不可用、移动和拉伸状态出现频率取决于应用。

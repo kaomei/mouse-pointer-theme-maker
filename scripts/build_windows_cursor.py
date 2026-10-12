@@ -10,7 +10,7 @@ import zlib
 from pathlib import Path
 from typing import Any
 
-from prepare_cursor import CURSOR_SIZE, PNG_SIGNATURE, validate_cursor_png
+from prepare_cursor import CURSOR_SIZE, PNG_SIGNATURE, read_png_metadata
 
 
 WINDOWS_CURSOR_ROLES = {
@@ -38,9 +38,8 @@ def _paeth(left: int, above: int, upper_left: int) -> int:
     return (left, above, upper_left)[distances.index(min(distances))]
 
 
-def read_rgba_png(path: Path) -> bytes:
+def read_rgba_png(path: Path, expected_size: int = CURSOR_SIZE) -> tuple[int, bytes]:
     """Decode an 8-bit RGBA PNG into top-down rows of RGBA pixels."""
-    validate_cursor_png(path, "windows cursor")
     data = path.read_bytes()
     position = len(PNG_SIGNATURE)
     width = height = bit_depth = color_type = None
@@ -56,8 +55,8 @@ def read_rgba_png(path: Path) -> bytes:
         payload = data[position + 8 : position + 8 + length]
         if kind == b"IHDR":
             width, height, bit_depth, color_type, compression, filtering, interlace = struct.unpack(">IIBBBBB", payload)
-            if (width, height, bit_depth, color_type, compression, filtering, interlace) != (CURSOR_SIZE, CURSOR_SIZE, 8, 6, 0, 0, 0):
-                raise ValueError("Windows cursor PNG must be a non-interlaced 32×32 8-bit RGBA PNG")
+            if (width, height, bit_depth, color_type, compression, filtering, interlace) != (width, height, 8, 6, 0, 0, 0):
+                raise ValueError("Windows cursor PNG must be a non-interlaced 8-bit RGBA PNG")
         elif kind == b"IDAT":
             compressed.extend(payload)
         elif kind == b"IEND":
@@ -70,14 +69,16 @@ def read_rgba_png(path: Path) -> bytes:
     except zlib.error as error:
         raise ValueError(f"invalid PNG compressed data: {error}") from error
 
-    stride = CURSOR_SIZE * 4
-    expected = (stride + 1) * CURSOR_SIZE
+    if width != height or width != expected_size:
+        raise ValueError(f"Windows cursor PNG must be {expected_size}×{expected_size} pixels")
+    stride = expected_size * 4
+    expected = (stride + 1) * expected_size
     if len(filtered) != expected:
         raise ValueError("PNG scanline data has an unexpected length")
-    decoded = bytearray(CURSOR_SIZE * stride)
+    decoded = bytearray(expected_size * stride)
     previous = bytearray(stride)
     offset = 0
-    for row_index in range(CURSOR_SIZE):
+    for row_index in range(expected_size):
         filter_type = filtered[offset]
         offset += 1
         raw = filtered[offset : offset + stride]
@@ -102,69 +103,111 @@ def read_rgba_png(path: Path) -> bytes:
             row[index] = decoded_value
         decoded[row_index * stride : (row_index + 1) * stride] = row
         previous = row
-    return bytes(decoded)
+    return expected_size, bytes(decoded)
 
 
-def write_cur(source_png: Path, output_cur: Path, hotspot: tuple[int, int]) -> Path:
-    """Write a one-image 32-bit Windows cursor using the requested click hotspot."""
+def write_cur(source_png: Path | list[Path], output_cur: Path, hotspot: tuple[int, int]) -> Path:
+    """Write a 32-bit Windows cursor with available 32px/64px images."""
     if len(hotspot) != 2 or not all(isinstance(value, int) and 0 <= value < CURSOR_SIZE for value in hotspot):
         raise ValueError("hotspot must be two integers inside the 32×32 cursor")
-    rgba = read_rgba_png(source_png)
-    xor = bytearray()
-    for row_index in reversed(range(CURSOR_SIZE)):
-        row = rgba[row_index * CURSOR_SIZE * 4 : (row_index + 1) * CURSOR_SIZE * 4]
-        for index in range(0, len(row), 4):
-            red, green, blue, alpha = row[index : index + 4]
-            xor.extend((blue, green, red, alpha))
-    and_mask = bytes(CURSOR_SIZE * (((CURSOR_SIZE + 31) // 32) * 4))
-    dib = struct.pack(
-        "<IiiHHIIiiII",
-        40,
-        CURSOR_SIZE,
-        CURSOR_SIZE * 2,
-        1,
-        32,
-        0,
-        len(xor),
-        0,
-        0,
-        0,
-        0,
-    ) + bytes(xor) + and_mask
-    header = struct.pack("<HHH", 0, 2, 1)
-    entry = struct.pack("<BBBBHHII", CURSOR_SIZE, CURSOR_SIZE, 0, 0, hotspot[0], hotspot[1], len(dib), 22)
+    sources = source_png if isinstance(source_png, list) else [source_png]
+    if not 1 <= len(sources) <= 2:
+        raise ValueError("Windows CUR supports one 32×32 image or a 32×32 plus 64×64 pair")
+    images: list[tuple[int, bytes]] = []
+    for source in sources:
+        size, rgba = read_rgba_png(source, expected_size=CURSOR_SIZE if len(images) == 0 else 64)
+        images.append((size, rgba))
+
+    dibs: list[bytes] = []
+    for size, rgba in images:
+        xor = bytearray()
+        for row_index in reversed(range(size)):
+            row = rgba[row_index * size * 4 : (row_index + 1) * size * 4]
+            for index in range(0, len(row), 4):
+                red, green, blue, alpha = row[index : index + 4]
+                xor.extend((blue, green, red, alpha))
+        mask_row_bytes = ((size + 31) // 32) * 4
+        and_mask = bytes(size * mask_row_bytes)
+        dibs.append(struct.pack(
+            "<IiiHHIIiiII",
+            40,
+            size,
+            size * 2,
+            1,
+            32,
+            0,
+            len(xor),
+            0,
+            0,
+            0,
+            0,
+        ) + bytes(xor) + and_mask)
+
+    header_size = 6 + len(dibs) * 16
+    entries = []
+    offset = header_size
+    for (size, _rgba), dib in zip(images, dibs):
+        factor = size / CURSOR_SIZE
+        entries.append(struct.pack(
+            "<BBBBHHII",
+            size if size < 256 else 0,
+            size if size < 256 else 0,
+            0,
+            0,
+            round(hotspot[0] * factor),
+            round(hotspot[1] * factor),
+            len(dib),
+            offset,
+        ))
+        offset += len(dib)
+    header = struct.pack("<HHH", 0, 2, len(dibs))
     output_cur.parent.mkdir(parents=True, exist_ok=True)
-    output_cur.write_bytes(header + entry + dib)
+    output_cur.write_bytes(header + b"".join(entries) + b"".join(dibs))
     return output_cur
 
 
 def parse_cur(data: bytes) -> dict[str, Any]:
-    """Return the structural fields needed to validate a single-image static CUR."""
+    """Return structural fields needed to validate a Windows CUR."""
     if len(data) < 62:
         raise ValueError("CUR file is too small")
     reserved, cursor_type, count = struct.unpack("<HHH", data[:6])
-    if reserved != 0 or cursor_type != 2 or count != 1:
-        raise ValueError("not a one-image Windows cursor")
-    width, height, color_count, entry_reserved, hotspot_x, hotspot_y, image_size, image_offset = struct.unpack("<BBBBHHII", data[6:22])
-    if color_count != 0 or entry_reserved != 0 or image_offset + image_size != len(data):
-        raise ValueError("invalid CUR image entry")
-    dib_size, dib_width, dib_height, planes, bit_count, compression, size_image, *_rest = struct.unpack("<IiiHHIIiiII", data[22:62])
-    if (dib_size, dib_width, planes, bit_count, compression) != (40, CURSOR_SIZE, 1, 32, 0):
-        raise ValueError("unsupported CUR bitmap")
-    xor_length = CURSOR_SIZE * CURSOR_SIZE * 4
-    and_mask_length = image_size - 40 - xor_length
-    if and_mask_length < 0:
-        raise ValueError("CUR bitmap is truncated")
-    first_pixel = tuple(data[62:66])
+    if reserved != 0 or cursor_type != 2 or count < 1:
+        raise ValueError("not a Windows cursor")
+    if len(data) < 6 + count * 16:
+        raise ValueError("CUR directory is truncated")
+    entries = []
+    for index in range(count):
+        start = 6 + index * 16
+        width, height, color_count, entry_reserved, hotspot_x, hotspot_y, image_size, image_offset = struct.unpack("<BBBBHHII", data[start : start + 16])
+        if color_count != 0 or entry_reserved != 0 or image_offset + image_size > len(data):
+            raise ValueError("invalid CUR image entry")
+        dib_size, dib_width, dib_height, planes, bit_count, compression, size_image, *_rest = struct.unpack("<IiiHHIIiiII", data[image_offset : image_offset + 40])
+        actual_width = width or 256
+        if (dib_size, dib_width, planes, bit_count, compression) != (40, actual_width, 1, 32, 0):
+            raise ValueError("unsupported CUR bitmap")
+        xor_length = actual_width * actual_width * 4
+        and_mask_length = image_size - 40 - xor_length
+        if and_mask_length < 0:
+            raise ValueError("CUR bitmap is truncated")
+        entries.append({
+            "size": (actual_width, height or 256),
+            "hotspot": (hotspot_x, hotspot_y),
+            "size_image": size_image,
+            "and_mask_length": and_mask_length,
+            "first_pixel_bgra": tuple(data[image_offset + 40 : image_offset + 44]),
+        })
+    first = entries[0]
     return {
         "type": cursor_type,
-        "size": (width or 256, height or 256),
-        "hotspot": (hotspot_x, hotspot_y),
+        "count": count,
+        "size": first["size"],
+        "sizes": [entry["size"] for entry in entries],
+        "hotspot": first["hotspot"],
         "bit_count": bit_count,
         "dib_height": dib_height,
-        "size_image": size_image,
-        "first_pixel_bgra": first_pixel,
-        "and_mask_length": and_mask_length,
+        "size_image": first["size_image"],
+        "first_pixel_bgra": first["first_pixel_bgra"],
+        "and_mask_length": first["and_mask_length"],
     }
 
 
@@ -213,7 +256,13 @@ Write-Host 'Windows default cursor values restored. If needed, select a scheme i
 """
 
 
-def _windows_readme(theme_name: str) -> str:
+def _windows_readme(theme_name: str, has_hidpi: bool = True) -> str:
+    hidpi_note = (
+        "Each `.cur` includes validated 32×32 and 64×64 resources so Windows can choose a sharper image at high display scaling."
+        if has_hidpi
+        else
+        "The package uses the validated 32×32 resources. A valid 64×64 source was not available, so Windows high-DPI selection is limited."
+    )
     return f"""# {theme_name} — Windows 10/11 cursor theme
 
 ## Install
@@ -224,6 +273,8 @@ def _windows_readme(theme_name: str) -> str:
 4. If the cursor does not refresh immediately, sign out and sign back in.
 
 The installer changes only the current user's cursor-role values under `HKCU\\Control Panel\\Cursors`; it does not need administrator permission and does not copy files into Windows system folders.
+
+{hidpi_note}
 
 ## Restore
 
@@ -241,6 +292,7 @@ def build_windows_theme(manifest_path: Path, output_dir: Path, force: bool = Fal
         raise FileExistsError(f"refusing to overwrite existing Windows package: {output_dir}")
     manifest, cursors = _load_windows_manifest(manifest_path)
     output_dir.mkdir(parents=True, exist_ok=True)
+    has_hidpi = True
     for role, state in WINDOWS_CURSOR_ROLES.items():
         cursor = cursors[state]
         if not isinstance(cursor, dict) or not isinstance(cursor.get("path"), str):
@@ -248,11 +300,28 @@ def build_windows_theme(manifest_path: Path, output_dir: Path, force: bool = Fal
         hotspot = cursor.get("hotspot")
         if not isinstance(hotspot, list) or len(hotspot) != 2 or not all(isinstance(value, int) for value in hotspot):
             raise ValueError(f"{state} must define a two-integer hotspot")
-        write_cur(manifest_path.parent / cursor["path"], output_dir / f"{role}.cur", (hotspot[0], hotspot[1]))
+        source_paths = [manifest_path.parent / cursor["path"]]
+        representations = cursor.get("representations")
+        if isinstance(representations, list) and len(representations) >= 2:
+            candidate = manifest_path.parent / representations[1]
+            if candidate.is_file():
+                try:
+                    metadata = read_png_metadata(candidate)
+                except ValueError:
+                    metadata = None
+                if metadata and metadata.width == 64 and metadata.height == 64 and metadata.has_alpha:
+                    source_paths.append(candidate)
+                else:
+                    has_hidpi = False
+            else:
+                has_hidpi = False
+        else:
+            has_hidpi = False
+        write_cur(source_paths, output_dir / f"{role}.cur", (hotspot[0], hotspot[1]))
     theme_name = str(manifest["theme"].get("name") or "Custom Cursor Theme")
     (output_dir / "install-current-user.ps1").write_text(_install_script(), encoding="utf-8")
     (output_dir / "restore-default.ps1").write_text(_restore_script(), encoding="utf-8")
-    (output_dir / "README-Windows.md").write_text(_windows_readme(theme_name), encoding="utf-8")
+    (output_dir / "README-Windows.md").write_text(_windows_readme(theme_name, has_hidpi), encoding="utf-8")
     return output_dir
 
 

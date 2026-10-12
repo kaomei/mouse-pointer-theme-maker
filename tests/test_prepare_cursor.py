@@ -33,6 +33,30 @@ def write_png(path: Path, width: int, height: int, color_type: int = 6) -> Path:
 
 
 class PrepareCursorTests(unittest.TestCase):
+    def test_resize_preserves_transparency_at_each_supported_size(self) -> None:
+        from PIL import Image, ImageDraw
+
+        with TemporaryDirectory() as directory:
+            folder = Path(directory)
+            source = folder / "master.png"
+            image = Image.new("RGBA", (512, 512), (0, 0, 0, 0))
+            ImageDraw.Draw(image).rectangle((128, 128, 384, 384), fill=(255, 0, 0, 255))
+            image.save(source)
+            for scale in (1, 2, 5, 10):
+                output = folder / f"{scale}.png"
+                prepare_cursor.prepare_cursor(source, output, "normal", resize=True, scale=scale)
+                with Image.open(output) as result:
+                    self.assertEqual(result.size, (32 * scale, 32 * scale))
+                    self.assertEqual(result.getpixel((0, 0))[3], 0)
+                    self.assertEqual(result.getpixel((16 * scale, 16 * scale)), (255, 0, 0, 255))
+
+    def test_resize_rejects_source_without_alpha(self) -> None:
+        with TemporaryDirectory() as directory:
+            folder = Path(directory)
+            source = write_png(folder / "opaque.png", 128, 128, color_type=2)
+            with self.assertRaisesRegex(ValueError, "transparency"):
+                prepare_cursor.prepare_cursor(source, folder / "output.png", "normal", resize=True)
+
     def test_validate_cursor_png_accepts_transparent_32_pixel_png(self) -> None:
         with TemporaryDirectory() as directory:
             path = write_png(Path(directory) / "normal.png", 32, 32)

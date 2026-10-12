@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import shutil
 import struct
-import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -56,26 +55,22 @@ def validate_cursor_png(path: Path, state: str, scale: int = 1) -> PngMetadata:
 
 
 def prepare_cursor(source: Path, destination: Path, state: str, resize: bool = False, scale: int = 1) -> PngMetadata:
-    """Copy a validated cursor or explicitly resample it with macOS sips."""
+    """Copy a validated cursor or resample it portably with Pillow."""
     destination.parent.mkdir(parents=True, exist_ok=True)
     if resize:
-        result = subprocess.run(
-            [
-                "/usr/bin/sips",
-                "--resampleHeightWidth",
-                str(CURSOR_SIZE * scale),
-                str(CURSOR_SIZE * scale),
-                str(source),
-                "--out",
-                str(destination),
-            ],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.returncode:
-            message = result.stderr.strip() or result.stdout.strip() or "unknown sips error"
-            raise ValueError(f"could not resize {state}: {message}")
+        try:
+            from PIL import Image
+
+            with Image.open(source) as image:
+                if "A" not in image.getbands() and "transparency" not in image.info:
+                    raise ValueError(f"{state} source must have transparency")
+                image.convert("RGBA").resize(
+                    (CURSOR_SIZE * scale, CURSOR_SIZE * scale), Image.Resampling.LANCZOS
+                ).save(destination, format="PNG")
+        except ImportError as error:
+            raise ValueError("Pillow is required: install with python -m pip install Pillow") from error
+        except OSError as error:
+            raise ValueError(f"could not resize {state}: {error}") from error
     else:
         shutil.copy2(source, destination)
     return validate_cursor_png(destination, state, scale)

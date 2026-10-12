@@ -70,6 +70,12 @@ The same eight original artworks expand to 51 mapped macOS cursor identifiers an
 
 ## Install the Codex skill
 
+**Runtime requirement (workflow version 1.1.0):** the session needs a real image-generation tool that accepts references and returns image files. Installing this skill does not enable image generation. A chat model or Responses-compatible endpoint alone is insufficient; unavailable generation stops explicitly rather than producing scripted substitute artwork.
+
+Python 3 and Pillow are required for local resizing and rendering (`python3 -m pip install Pillow`, or `py -3 -m pip install Pillow` on Windows). Resizing no longer requires macOS `sips`. Supported image tools may run independent jobs in batches of 2–3 after the first style anchor is reviewed; other tools run sequentially. Passing states are retained and only failed states are repaired. Duration and artwork vary by provider; gallery examples are not identical-output guarantees.
+
+When upgrading, move old skill folders—including the legacy `macos-cursor-skin`—outside the skills directory before installing the new version. Renaming a backup inside the skills directory can leave it discoverable. Restart Codex and check the loaded skill path and version. A per-run `generation-record.json` records provider and state output evidence without credentials or full conversation logs.
+
 ```bash
 git clone https://github.com/kaomei/mouse-pointer-theme-maker.git
 mkdir -p ~/.codex/skills
