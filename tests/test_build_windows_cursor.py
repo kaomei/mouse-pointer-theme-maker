@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import struct
+import shutil
+import subprocess
 import sys
 import unittest
 import zlib
@@ -48,6 +50,56 @@ def write_rgba_png_size(path: Path, size: int) -> Path:
 
 
 class BuildWindowsCursorTests(unittest.TestCase):
+    def test_theme_install_slug_is_stable_and_distinguishes_sanitized_collisions(self) -> None:
+        first = build_windows_cursor._safe_theme_slug("A/B")
+        second = build_windows_cursor._safe_theme_slug("A B")
+
+        self.assertEqual(first, build_windows_cursor._safe_theme_slug("A/B"))
+        self.assertNotEqual(first, second)
+
+    def test_generated_powershell_scripts_have_utf8_bom_and_parse(self) -> None:
+        powershell = shutil.which("powershell.exe") or shutil.which("powershell") or shutil.which("pwsh")
+        if not powershell:
+            self.skipTest("PowerShell is required to parse generated Windows scripts")
+
+        with TemporaryDirectory() as directory:
+            folder = Path(directory)
+            states = {
+                "normal": ("com.apple.coregraphics.Arrow", [2, 2]),
+                "text": ("com.apple.coregraphics.IBeam", [16, 16]),
+                "action": ("com.apple.cursor.13", [20, 5]),
+                "forbidden": ("com.apple.cursor.3", [16, 16]),
+                "busy": ("com.apple.cursor.4", [16, 16]),
+                "open_hand": ("com.apple.cursor.12", [16, 16]),
+                "resize_horizontal": ("com.apple.cursor.19", [16, 16]),
+                "resize_vertical": ("com.apple.cursor.23", [16, 16]),
+            }
+            cursors = {}
+            for state, (identifier, hotspot) in states.items():
+                write_rgba_png(folder / f"{state}.png")
+                cursors[state] = {"path": f"{state}.png", "identifier": identifier, "hotspot": hotspot}
+            manifest = folder / "manifest.json"
+            manifest.write_text(json.dumps({"theme": {"name": "Test Theme"}, "cursors": cursors}), encoding="utf-8")
+            package = build_windows_cursor.build_windows_theme(manifest, folder / "windows")
+
+            scripts = list(package.glob("*.ps1"))
+            self.assertEqual(len(scripts), 4)
+            for script in scripts:
+                self.assertTrue(script.read_bytes().startswith(b"\xef\xbb\xbf"), script.name)
+                ps_path = str(script.resolve()).replace("'", "''")
+                command = (
+                    "$tokens=$null; $errors=$null; "
+                    f"[System.Management.Automation.Language.Parser]::ParseFile('{ps_path}',[ref]$tokens,[ref]$errors) | Out-Null; "
+                    "if($errors.Count){$errors | ForEach-Object { Write-Error $_ }; exit 1}"
+                )
+                result = subprocess.run(
+                    [powershell, "-NoProfile", "-NonInteractive", "-Command", command],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_write_cur_encodes_a_32_bit_cursor_with_requested_hotspot_and_bgra_pixels(self) -> None:
         with TemporaryDirectory() as directory:
             folder = Path(directory)
@@ -116,7 +168,7 @@ class BuildWindowsCursorTests(unittest.TestCase):
         self.assertEqual(parsed["sizes"], [(32, 32)])
         self.assertIn("high-DPI selection is limited", readme)
 
-    def test_build_windows_theme_writes_all_roles_and_user_scoped_scripts(self) -> None:
+    def test_build_windows_theme_writes_three_size_scripts_and_user_scoped_persistence(self) -> None:
         with TemporaryDirectory() as directory:
             folder = Path(directory)
             states = {
@@ -137,17 +189,40 @@ class BuildWindowsCursorTests(unittest.TestCase):
             manifest.write_text(json.dumps({"theme": {"name": "Test Theme"}, "cursors": cursors}), encoding="utf-8")
             package = build_windows_cursor.build_windows_theme(manifest, folder / "windows")
             generated_names = sorted(path.name for path in package.glob("*.cur"))
-            install = (package / "install-current-user.ps1").read_text(encoding="utf-8")
+            generated_install_names = sorted(path.name for path in package.glob("install-current-user-*.ps1"))
+            legacy_install_exists = (package / "install-current-user.ps1").exists()
+            install_scripts = {
+                label: (package / f"install-current-user-{label}.ps1").read_text(encoding="utf-8")
+                for label in ("小", "中", "大")
+            }
             restore = (package / "restore-default.ps1").read_text(encoding="utf-8")
 
         self.assertEqual(generated_names, [
             "AppStarting.cur", "Arrow.cur", "Crosshair.cur", "Hand.cur", "Help.cur", "IBeam.cur", "NWPen.cur", "No.cur",
             "SizeAll.cur", "SizeNESW.cur", "SizeNS.cur", "SizeNWSE.cur", "SizeWE.cur", "UpArrow.cur", "Wait.cur",
         ])
-        self.assertIn("HKCU:\\Control Panel\\Cursors", install)
-        self.assertIn("$PSScriptRoot", install)
-        self.assertIn("UpdatePerUserSystemParameters", install)
+        self.assertEqual(generated_install_names, [
+            "install-current-user-中.ps1", "install-current-user-大.ps1", "install-current-user-小.ps1",
+        ])
+        self.assertFalse(legacy_install_exists)
+        self.assertIn("HKCU:\\Control Panel\\Cursors", install_scripts["小"])
+        self.assertIn("$PSScriptRoot", install_scripts["小"])
+        self.assertIn("LoadImage", install_scripts["小"])
+        self.assertIn("Windows\\CurrentVersion\\Run", install_scripts["小"])
+        self.assertIn("$size = 64", install_scripts["小"])
+        self.assertIn("$size = 96", install_scripts["中"])
+        self.assertIn("$size = 128", install_scripts["大"])
+        self.assertNotIn("UpdatePerUserSystemParameters", install_scripts["小"])
         self.assertIn("Remove-ItemProperty", restore)
+        self.assertIn("cursor-backup.json", restore)
+        self.assertIn("SystemParametersInfo", restore)
+        self.assertIn("backup was not found", restore)
+        self.assertLess(restore.index("if (-not (Test-Path -LiteralPath $backupPath))"), restore.index("Remove-ItemProperty"))
+        self.assertIn("StringComparison]::OrdinalIgnoreCase", install_scripts["小"])
+        self.assertIn("$sourcePath", install_scripts["小"])
+        self.assertIn("$destinationPath", install_scripts["小"])
+        for role, metadata in build_windows_cursor.WINDOWS_CURSOR_ROLES.items():
+            self.assertIn(f"'{role}' = {metadata.system_cursor_id}", install_scripts["小"])
 
 
 if __name__ == "__main__":

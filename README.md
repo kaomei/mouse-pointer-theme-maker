@@ -169,13 +169,13 @@ cp -R . ~/.gemini/config/skills/mouse_pointer_theme_maker
 - **底层覆盖**：自动将 8 个核心设计智能扩展映射为 51 个 macOS 系统级光标 Identifier，体验丝滑完整。
 
 ### 🪟 Windows 平台交付
-- **交付产物**：打包为 15 个标准的 `.cur` 光标文件，并附带 `install-current-user.ps1` 和 `restore-default.ps1`。
-- **使用方式**：右键 `install-current-user.ps1` 选择 **使用 PowerShell 运行 (Run with PowerShell)** 即可秒级生效；随时运行 `restore-default.ps1` 可一键恢复系统默认鼠标。
-- **安全保障**：仅写入当前用户的 `HKCU\Control Panel\Cursors`，无需管理员权限，不篡改系统全局文件。
+- **交付产物**：15 个标准 `.cur` 光标文件、64/96/128 三个尺寸安装脚本和 `restore-default.ps1`。
+- **使用方式**：右键 `install-current-user-小.ps1`、`install-current-user-中.ps1` 或 `install-current-user-大.ps1`，选择 **使用 PowerShell 运行 (Run with PowerShell)**；选中的尺寸立即生效，并在每次登录时自动重应用。
+- **安全保障**：仅写入当前用户的 `HKCU` 鼠标值和登录启动项，无需管理员权限，不修改系统全局文件。
 
 ---
 
-确认后的图案会打包为 15 个 `.cur` 文件；每个文件优先包含 32×32 与 64×64 两个清晰尺寸，并提供当前用户安装脚本和恢复脚本。安装脚本只写入 `HKCU\Control Panel\Cursors`，不需要管理员权限。
+确认后的图案会打包为 15 个 `.cur` 文件，并提供 64×64（小）、96×96（中）、128×128（大）三个当前用户安装脚本。脚本会立即用目标尺寸加载 15 个角色，并在当前用户每次登录时自动重应用；恢复脚本会还原首次安装前的设置。
 
 ## 🛡️ 质量保证与安全规范 (Quality Guarantees)
 

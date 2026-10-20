@@ -153,9 +153,9 @@ Theme: Turn my blue mascot reference into a complete pointer theme.
 - **System Coverage**: The 8 original artworks expand automatically to 51 macOS system cursor identifiers.
 
 ### 🪟 Windows Delivery
-- **Package Format**: Delivered as 15 `.cur` files with `install-current-user.ps1` and `restore-default.ps1`.
-- **Installation**: Right-click `install-current-user.ps1` and select **Run with PowerShell** to apply instantly.
-- **Safety**: Modifies only `HKCU\Control Panel\Cursors` without administrator privileges.
+- **Package Format**: Delivered as 15 `.cur` files with 64/96/128 runtime size installers and `restore-default.ps1`.
+- **Installation**: Right-click `install-current-user-小.ps1`, `install-current-user-中.ps1`, or `install-current-user-大.ps1` and select **Run with PowerShell**. The selected size applies immediately and is reapplied at every logon.
+- **Safety**: Modifies only current-user cursor values and the current-user logon entry, without administrator privileges.
 
 ---
 
