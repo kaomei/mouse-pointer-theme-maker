@@ -16,7 +16,7 @@ An open-source AI Skill for creators and desktop aesthetics enthusiasts. Turn a 
 
 <br/>
 
-<img src="assets/readme/hero-cover.png" alt="Mouse Pointer Theme Maker Cover Preview" width="800">
+<img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/assets/readme/hero-cover.png" alt="Mouse Pointer Theme Maker Cover Preview" width="800">
 
 <br/>
 
@@ -45,7 +45,7 @@ Ideal for: **desktop personalization, original IP merchandise, custom creator cu
 Authentic 16/32-bit pixel reconstruction with sharp silhouettes and crisp color clusters, capturing the mascot's signature sleepy expression.
 
 <div align="center">
-  <img src="examples/kaozai-retro-pixel/preview.png" alt="Kaozai retro pixel eight-state mouse pointer theme" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/kaozai-retro-pixel/preview.png" alt="Kaozai retro pixel eight-state mouse pointer theme" width="750">
 </div>
 
 ### 🐻 Kaomeier · Chibi Anime
@@ -53,7 +53,7 @@ Authentic 16/32-bit pixel reconstruction with sharp silhouettes and crisp color 
 A polished Q-version anime character system built around a blue bear hood, expressive reactions, and legible cursor cues.
 
 <div align="center">
-  <img src="examples/kaomeier-chibi-anime/preview.png" alt="Kaomeier chibi anime eight-state mouse pointer theme" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/kaomeier-chibi-anime/preview.png" alt="Kaomeier chibi anime eight-state mouse pointer theme" width="750">
 </div>
 
 ### 🎭 Palace Drama · Abstract Expression
@@ -61,7 +61,7 @@ A polished Q-version anime character system built around a blue bear hood, expre
 Exaggerated poses, visual metaphors, and meme-like comedic timing that bring abstract art to life.
 
 <div align="center">
-  <img src="examples/zhenhuan-abstract-expression/preview.png" alt="Palace drama abstract-expression eight-state mouse pointer theme" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/zhenhuan-abstract-expression/preview.png" alt="Palace drama abstract-expression eight-state mouse pointer theme" width="750">
 </div>
 
 > 💡 *Note: The red cross in preview sheets marks the true hotspot location and is never included in the installed cursor artwork.*

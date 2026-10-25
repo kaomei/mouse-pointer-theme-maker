@@ -16,7 +16,7 @@
 
 <br/>
 
-<img src="assets/readme/hero-cover.png" alt="鼠标指针主题制作器精选封面" width="800">
+<img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/assets/readme/hero-cover.png" alt="鼠标指针主题制作器精选封面" width="800">
 
 <br/>
 
@@ -45,7 +45,7 @@
 真正的 16/32 位复古游戏像素重构，清晰利落的功能轮廓与色彩层次，完美还原烤仔标志性的慵懒困倦神态。
 
 <div align="center">
-  <img src="examples/kaozai-retro-pixel/preview.png" alt="烤仔复古像素风八状态鼠标指针主题" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/kaozai-retro-pixel/preview.png" alt="烤仔复古像素风八状态鼠标指针主题" width="750">
 </div>
 
 ### 🐻 烤妹儿 · Q 版二次元风 (Chibi Anime)
@@ -53,7 +53,7 @@
 精致灵动的 Q 版二次元角色体系，围绕标志性蓝色熊帽、萌趣大表情与清晰易辨的功能符号精心设计。
 
 <div align="center">
-  <img src="examples/kaomeier-chibi-anime/preview.png" alt="烤妹儿Q版二次元风八状态鼠标指针主题" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/kaomeier-chibi-anime/preview.png" alt="烤妹儿Q版二次元风八状态鼠标指针主题" width="750">
 </div>
 
 ### 🎭 宫斗表情包 · 抽象表达风 (Abstract Expression)
@@ -61,7 +61,7 @@
 夸张的动作形变、视觉隐喻与表情包节奏，生动展现抽象风格的张力与幽默感（绝不仅限于恶搞）。
 
 <div align="center">
-  <img src="examples/zhenhuan-abstract-expression/preview.png" alt="宫斗抽象表达风八状态鼠标指针主题" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/zhenhuan-abstract-expression/preview.png" alt="宫斗抽象表达风八状态鼠标指针主题" width="750">
 </div>
 
 > 💡 *注：预览图中的红色十字仅用于直观展示点击热点位置，安装后的实际鼠标图案中绝不会出现。*

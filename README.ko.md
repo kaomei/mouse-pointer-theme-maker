@@ -16,7 +16,7 @@
 
 <br/>
 
-<img src="assets/readme/hero-cover.png" alt="마우스 포인터 테마 메이커 커버 미리보기" width="800">
+<img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/assets/readme/hero-cover.png" alt="마우스 포인터 테마 메이커 커버 미리보기" width="800">
 
 <br/>
 
@@ -41,17 +41,17 @@
 
 ### 🎮 카오자이 · 레트로 픽셀 (Retro Pixel)
 <div align="center">
-  <img src="examples/kaozai-retro-pixel/preview.png" alt="카오자이 레트로 픽셀 8상태 테마" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/kaozai-retro-pixel/preview.png" alt="카오자이 레트로 픽셀 8상태 테마" width="750">
 </div>
 
 ### 🐻 카오메이 · SD 애니메이션 (Chibi Anime)
 <div align="center">
-  <img src="examples/kaomeier-chibi-anime/preview.png" alt="카오메이 SD 애니 8상태 테마" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/kaomeier-chibi-anime/preview.png" alt="카오메이 SD 애니 8상태 테마" width="750">
 </div>
 
 ### 🎭 궁중 드라마 · 추상 표현 (Abstract Expression)
 <div align="center">
-  <img src="examples/zhenhuan-abstract-expression/preview.png" alt="궁중 드라마 추상 표현 8상태 테마" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/zhenhuan-abstract-expression/preview.png" alt="궁중 드라마 추상 표현 8상태 테마" width="750">
 </div>
 
 ---
