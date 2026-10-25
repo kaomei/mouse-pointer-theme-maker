@@ -16,7 +16,7 @@
 
 <br/>
 
-<img src="assets/readme/hero-cover.png" alt="マウスポインターテーマ作成器 カバープレビュー" width="800">
+<img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/assets/readme/hero-cover.png" alt="マウスポインターテーマ作成器 カバープレビュー" width="800">
 
 <br/>
 
@@ -42,17 +42,17 @@
 
 ### 🎮 Kaozai · レトロピクセル (Retro Pixel)
 <div align="center">
-  <img src="examples/kaozai-retro-pixel/preview.png" alt="Kaozai レトロピクセル 8状態テーマ" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/kaozai-retro-pixel/preview.png" alt="Kaozai レトロピクセル 8状態テーマ" width="750">
 </div>
 
 ### 🐻 Kaomeier · ちびアニメ (Chibi Anime)
 <div align="center">
-  <img src="examples/kaomeier-chibi-anime/preview.png" alt="Kaomeier ちびアニメ 8状態テーマ" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/kaomeier-chibi-anime/preview.png" alt="Kaomeier ちびアニメ 8状態テーマ" width="750">
 </div>
 
 ### 🎭 宮廷ドラマ · アブストラクト表現 (Abstract Expression)
 <div align="center">
-  <img src="examples/zhenhuan-abstract-expression/preview.png" alt="宮廷ドラマ アブストラクト表現 8状態テーマ" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/zhenhuan-abstract-expression/preview.png" alt="宮廷ドラマ アブストラクト表現 8状態テーマ" width="750">
 </div>
 
 ---

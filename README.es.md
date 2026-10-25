@@ -16,7 +16,7 @@ Un Skill de IA de código abierto para creadores y entusiastas de la personaliza
 
 <br/>
 
-<img src="assets/readme/hero-cover.png" alt="Vista previa de portada del Creador de Temas de Punteros" width="800">
+<img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/assets/readme/hero-cover.png" alt="Vista previa de portada del Creador de Temas de Punteros" width="800">
 
 <br/>
 
@@ -41,17 +41,17 @@ Ideal para: **personalización de escritorio, productos de personajes/IPs, curso
 
 ### 🎮 Kaozai · Pixel Retro (Retro Pixel)
 <div align="center">
-  <img src="examples/kaozai-retro-pixel/preview.png" alt="Tema Kaozai Pixel Retro 8 Estados" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/kaozai-retro-pixel/preview.png" alt="Tema Kaozai Pixel Retro 8 Estados" width="750">
 </div>
 
 ### 🐻 Kaomeier · Anime Chibi (Chibi Anime)
 <div align="center">
-  <img src="examples/kaomeier-chibi-anime/preview.png" alt="Tema Kaomeier Chibi 8 Estados" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/kaomeier-chibi-anime/preview.png" alt="Tema Kaomeier Chibi 8 Estados" width="750">
 </div>
 
 ### 🎭 Drama de Palacio · Expresión Abstracta (Abstract Expression)
 <div align="center">
-  <img src="examples/zhenhuan-abstract-expression/preview.png" alt="Tema Drama de Palacio 8 Estados" width="750">
+  <img src="https://cdn.jsdelivr.net/gh/kaomei/mouse-pointer-theme-maker@eea0c47790cdd19d54be5bb95a83efcd66fced30/examples/zhenhuan-abstract-expression/preview.png" alt="Tema Drama de Palacio 8 Estados" width="750">
 </div>
 
 ---
