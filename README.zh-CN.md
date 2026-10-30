@@ -33,7 +33,7 @@
 - 🖼️ **2440×1388 超清卡片预览**：坚持“先看预览，满意后再打包”的原则，320×320 原始高分辨率素材渲染，清晰标注红色十字点击热点（Hotspot），所见即所得。
 - 💻 **macOS & Windows 原生独立交付**：
   - **macOS**：一键生成 `.cape` 主题包，自动智能映射扩展至 51 个系统底层精准 Identifier，完美适配 Mousecape SwiftUI。
-  - **Windows**：一键生成 15 个标准 `.cur` 光标文件，附带当前用户一键安装与恢复脚本（只写入 `HKCU`，安全干净，无需管理员权限）。
+  - **Windows**：一键生成 15 个包含 32/64/96/128 原生资源的 `.cur` 光标文件、同源高分辨率运行时 PNG，以及当前用户一键安装与恢复脚本（只写入 `HKCU`，无需管理员权限）。
 - 🔍 **精确热点对齐与安全边距保护**：热点严密落在箭头尖端、工字中心、食指尖、掌心或缩放箭头交叉点，内置自动透明边缘质检，杜绝裁切毛边与杂色残留。
 
 ---
@@ -169,13 +169,13 @@ cp -R . ~/.gemini/config/skills/mouse_pointer_theme_maker
 - **底层覆盖**：自动将 8 个核心设计智能扩展映射为 51 个 macOS 系统级光标 Identifier，体验丝滑完整。
 
 ### 🪟 Windows 平台交付
-- **交付产物**：打包为 15 个标准的 `.cur` 光标文件，并附带 `install-current-user.ps1` 和 `restore-default.ps1`。
-- **使用方式**：右键 `install-current-user.ps1` 选择 **使用 PowerShell 运行 (Run with PowerShell)** 即可秒级生效；随时运行 `restore-default.ps1` 可一键恢复系统默认鼠标。
-- **安全保障**：仅写入当前用户的 `HKCU\Control Panel\Cursors`，无需管理员权限，不篡改系统全局文件。
+- **交付产物**：15 个包含 32/64/96/128 原生资源的 `.cur` 光标文件、`runtime` 高分辨率 PNG、64/96/128 三个尺寸安装脚本和 `restore-default.ps1`。
+- **使用方式**：右键 `install-current-user-小.ps1`、`install-current-user-中.ps1` 或 `install-current-user-大.ps1`，选择 **使用 PowerShell 运行 (Run with PowerShell)**；选中的尺寸立即生效，并在每次登录时自动重应用。
+- **安全保障**：仅写入当前用户的 `HKCU` 鼠标值和登录启动项；安装脚本从同一高分辨率 PNG 创建 HCURSOR 后立即调用 `SetSystemCursor`，无需管理员权限，不修改系统全局文件。
 
 ---
 
-确认后的图案会打包为 15 个 `.cur` 文件；每个文件优先包含 32×32 与 64×64 两个清晰尺寸，并提供当前用户安装脚本和恢复脚本。安装脚本只写入 `HKCU\Control Panel\Cursors`，不需要管理员权限。
+确认后的图案会打包为 15 个 `.cur` 文件，并提供 64×64（小）、96×96（中）、128×128（大）三个当前用户安装脚本。脚本会从同源高分辨率 PNG 创建目标尺寸的 HCURSOR，立即应用 15 个角色，并在当前用户每次登录时自动重应用；恢复脚本会还原首次安装前的设置。
 
 ## 🛡️ 质量保证与安全规范 (Quality Guarantees)
 

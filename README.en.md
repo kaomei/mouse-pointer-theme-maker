@@ -33,7 +33,7 @@ Ideal for: **desktop personalization, original IP merchandise, custom creator cu
 - 🖼️ **2440×1388 High-Resolution Preview**: "Preview first, package only after approval." Rendered from 320×320 source artwork with visible red hotspot crosses for complete transparency.
 - 💻 **Native Dual-Platform Delivery**:
   - **macOS**: Generates `.cape` packages mapped automatically to 51 system-level cursor identifiers for Mousecape SwiftUI.
-  - **Windows**: Generates 15 `.cur` roles with a current-user PowerShell installer (writes only to `HKCU`, no admin permissions required).
+  - **Windows**: Generates 15 `.cur` roles with native 32/64/96/128 resources, matching high-resolution runtime PNGs, and a current-user PowerShell installer (writes only to `HKCU`, no admin permissions required).
 - 🔍 **Strict Hotspot & Safe Border Validation**: Hotspots strictly anchored to functional arrow tips, I-beam centers, or fingertips; automatic checks eliminate edge crop residue.
 
 ---
@@ -153,9 +153,9 @@ Theme: Turn my blue mascot reference into a complete pointer theme.
 - **System Coverage**: The 8 original artworks expand automatically to 51 macOS system cursor identifiers.
 
 ### 🪟 Windows Delivery
-- **Package Format**: Delivered as 15 `.cur` files with `install-current-user.ps1` and `restore-default.ps1`.
-- **Installation**: Right-click `install-current-user.ps1` and select **Run with PowerShell** to apply instantly.
-- **Safety**: Modifies only `HKCU\Control Panel\Cursors` without administrator privileges.
+- **Package Format**: Delivered as 15 `.cur` files with native 32/64/96/128 resources, matching runtime PNGs, 64/96/128 size installers, and `restore-default.ps1`.
+- **Installation**: Right-click `install-current-user-小.ps1`, `install-current-user-中.ps1`, or `install-current-user-大.ps1` and select **Run with PowerShell**. The selected size applies immediately and is reapplied at every logon.
+- **Safety**: Modifies only current-user cursor values and the current-user logon entry, creates each selected-size HCURSOR with `CreateIconIndirect`, and applies it immediately with `SetSystemCursor` without administrator privileges.
 
 ---
 
