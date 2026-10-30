@@ -1,6 +1,6 @@
 # Windows 10/11 installation
 
-The Windows package contains 15 `.cur` files, three size-specific PowerShell installers, and one restore script. Each `.cur` includes the validated 32×32 resource and, when the source manifest has a valid 2x file, a 64×64 resource for high-DPI selection. It does not use Mousecape and does not require administrator permission.
+The Windows package contains 15 `.cur` files, a `runtime` folder with high-resolution PNGs, three size-specific PowerShell installers, and one restore script. Each `.cur` includes native 32×32, 64×64, 96×96, and 128×128 resources generated from the same transparent artwork canvas. It does not use Mousecape and does not require administrator permission.
 
 ## Install
 
@@ -12,7 +12,7 @@ The Windows package contains 15 `.cur` files, three size-specific PowerShell ins
 3. Review the normal Windows confirmation prompt, then allow it only if the folder is the expected theme package.
 4. The selected size applies immediately. The same size is reapplied for the current user at every logon.
 
-The selected script writes only current-user values under `HKCU\\Control Panel\\Cursors` and `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`. It copies the cursor files and the selected startup script to `%LOCALAPPDATA%` so login reapplication remains stable. It does not ask for administrator permission and must never be run by the agent.
+The selected script writes only current-user values under `HKCU\\Control Panel\\Cursors` and `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`. It copies the cursor files, selected-size runtime PNGs, and the startup script to `%LOCALAPPDATA%`, then creates matching `HCURSOR` objects with `CreateIconIndirect` and immediately applies them with `SetSystemCursor`. It does not ask for administrator permission and must never be run by the agent.
 
 ## Restore
 
