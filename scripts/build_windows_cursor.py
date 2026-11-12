@@ -441,7 +441,9 @@ Set-ItemProperty -Path $cursorKey -Name 'Scheme Source' -Value 1
 $runtimeSource = Join-Path $sourceRoot (Join-Path 'runtime' ([string]$size))
 $runtimeTarget = Join-Path $installRoot (Join-Path 'runtime' ([string]$size))
 New-Item -Path $runtimeTarget -ItemType Directory -Force | Out-Null
-Copy-Item -Path (Join-Path $runtimeSource '*.png') -Destination $runtimeTarget -Force
+if (-not [string]::Equals([IO.Path]::GetFullPath($runtimeSource), [IO.Path]::GetFullPath($runtimeTarget), [StringComparison]::OrdinalIgnoreCase)) {{
+    Copy-Item -Path (Join-Path $runtimeSource '*.png') -Destination $runtimeTarget -Force
+}}
 $cursorSpecs = @{{
 {runtime_role_lines}
 }}

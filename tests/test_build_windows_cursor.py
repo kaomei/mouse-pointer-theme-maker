@@ -296,6 +296,53 @@ class BuildWindowsCursorTests(unittest.TestCase):
             self.assertTrue(script_bytes.startswith(b"\xef\xbb\xbf"))
             self.assertTrue(script_bytes[3:].isascii())
 
+    def test_generated_installer_skips_runtime_copy_to_itself_and_copies_from_package(self) -> None:
+        powershell = shutil.which("powershell.exe") or shutil.which("pwsh")
+        if not powershell:
+            self.skipTest("PowerShell is required to exercise generated installer logic")
+
+        with TemporaryDirectory() as directory:
+            folder = Path(directory)
+            manifest = write_high_resolution_theme(folder)
+            package = build_windows_cursor.build_windows_theme(manifest, folder / "windows")
+            install = (package / "install-current-user-大.ps1").read_text(encoding="utf-8-sig")
+            # Exercise only file copying, without changing live registry or cursors.
+            runtime_copy = install[install.index("$runtimeSource ="):install.index("$cursorSpecs =")]
+            runtime_copy = runtime_copy.split("foreach ($entry in $files.GetEnumerator())", 1)[0]
+
+        for same_directory in (True, False):
+            with self.subTest(same_directory=same_directory), TemporaryDirectory() as directory:
+                root = Path(directory)
+                source_root = root / "package"
+                install_root = source_root if same_directory else root / "installed"
+                source_runtime = source_root / "runtime" / "128"
+                source_runtime.mkdir(parents=True)
+                (source_runtime / "action.png").write_text("runtime cursor", encoding="ascii")
+
+                def ps_quote(path: Path) -> str:
+                    return str(path).replace("'", "''")
+
+                command = "\n".join(
+                    (
+                        "$ErrorActionPreference = 'Stop'",
+                        f"$sourceRoot = '{ps_quote(source_root)}'",
+                        f"$installRoot = '{ps_quote(install_root)}'",
+                        "$size = 128",
+                        runtime_copy,
+                    )
+                )
+                result = subprocess.run(
+                    [powershell, "-NoProfile", "-NonInteractive", "-Command", command],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+                installed_runtime = install_root / "runtime" / "128" / "action.png"
+                self.assertTrue(installed_runtime.is_file())
+                self.assertEqual(installed_runtime.read_text(encoding="ascii"), "runtime cursor")
+
 
 if __name__ == "__main__":
     unittest.main()
