@@ -22,12 +22,12 @@
 
 ## Windows 10/11：从解压到应用
 
-Windows 不需要 Mousecape，使用包内的 `.cur` 文件和安装脚本。此包只修改当前 Windows 账户的鼠标设置，不需要管理员权限。
+Windows 不需要 Mousecape，使用包内的 `.cur` 文件、高分辨率 `runtime` PNG 和安装脚本。安装脚本从高分辨率 PNG 创建所选尺寸的 HCURSOR 并立即应用；此包只修改当前 Windows 账户的鼠标设置，不需要管理员权限。
 
-1. 右键交付包，选择 **全部解压缩**。把整个 Windows 主题文件夹移动到不会删除的位置，例如“文档/鼠标皮肤/主题名”。**安装后不能移动或删除这个文件夹**，因为 Windows 会持续从这里读取 `.cur` 文件。
-2. 打开该文件夹，确认里面有 `install-current-user.ps1`、`restore-default.ps1` 和多个 `.cur` 文件。
-3. 右键 `install-current-user.ps1`，选择 **Run with PowerShell（使用 PowerShell 运行）**。Windows 11 如未看到它，先选择 **显示更多选项**。只在文件夹确实是本主题包时确认系统提示。
-4. 安装脚本只写入当前用户的 `HKCU\Control Panel\Cursors`，不会索取管理员权限。鼠标通常会立刻刷新；没有刷新就注销 Windows 后重新登录。
+1. 右键交付包，选择 **全部解压缩**。把整个 Windows 主题文件夹移动到不会删除的位置，例如“文档/鼠标皮肤/主题名”。安装脚本会把运行所需的 `.cur` 文件和所选脚本复制到 `%LOCALAPPDATA%`；保留解压目录以便之后运行 `restore-default.ps1`。
+2. 打开该文件夹，确认里面有 `runtime` 文件夹、`install-current-user-小.ps1`、`install-current-user-中.ps1`、`install-current-user-大.ps1`、`restore-default.ps1` 和 15 个 `.cur` 文件。
+3. 根据大小选择一个脚本：`小` 为 64×64，`中` 为 96×96，`大` 为 128×128。右键选中的脚本，选择 **Run with PowerShell（使用 PowerShell 运行）**。Windows 11 如未看到它，先选择 **显示更多选项**。只在文件夹确实是本主题包时确认系统提示。
+4. 脚本把 `.cur`、对应尺寸的 `runtime` PNG 和启动脚本复制到 `%LOCALAPPDATA%`，只写入当前用户的 `HKCU\Control Panel\Cursors` 和登录启动项。它使用 `CreateIconIndirect` 创建 64×64、96×96 或 128×128 HCURSOR，再通过 `SetSystemCursor` 立即应用；同一尺寸会在该用户每次登录时自动重新应用。
 5. 若 Windows 拦截脚本，先确认文件来自本主题包，再右键脚本选择 **属性**；如果底部有“解除锁定”，勾选并点击确定，再重试。不要下载来源不明的同名脚本。
 
 ## 安装后立刻验证
@@ -55,11 +55,11 @@ Windows 不需要 Mousecape，使用包内的 `.cur` 文件和安装脚本。此
 
 | 现象 | macOS 解决方法 | Windows 解决方法 |
 | --- | --- | --- |
-| 主题导入后没有变化 | 重新打开 Mousecape，完成界面中的 Helper 安装提示后再 Apply；确认导入的是 `.cape` 而不是 zip。 | 确认主题文件夹没有被移动；重新运行 `install-current-user.ps1`，然后注销/登录。 |
+| 主题导入后没有变化 | 重新打开 Mousecape，完成界面中的 Helper 安装提示后再 Apply；确认导入的是 `.cape` 而不是 zip。 | 确认主题文件夹可读取；重新运行选中的 `install-current-user-小/中/大.ps1`。 |
 | 只在部分软件里变化 | 正常：应用自己决定请求哪种光标；用 Finder 的文本和窗口边缘按上表验证。 | 正常：应用自己决定角色；用资源管理器、记事本和浏览器链接按上表验证。 |
 | macOS 提示版本不能打开 | 删除旧版 Mousecape，改用最新 SwiftUI 版本；必要时 `control`-点击 → 打开。 | 不适用。 |
 | Windows 看不到 Run with PowerShell | 先点“显示更多选项”；若被拦截，打开文件属性并解除锁定后重试。 | 同左。 |
-| 光标看起来模糊或点击偏移 | 不要继续使用旧主题；回传截图和所用系统版本，让制作者重新检查 Retina 图层与热点。 | 回传截图和所用缩放比例，让制作者重新检查 `.cur` 热点和尺寸。 |
+| 光标看起来模糊或点击偏移 | 不要继续使用旧主题；回传截图和所用系统版本，让制作者重新检查 Retina 图层与热点。 | 确认选用了预期尺寸；回传截图和缩放比例，让制作者检查同一规范化画布的高分辨率 PNG 与 manifest 热点映射。 |
 
 macOS 的鼠标颜色、对比度或某些应用自绘光标也可能覆盖 Mousecape。遇到“某个 app 永远不变”，先用 Finder 或 Safari 的普通网页验证；若这些位置正常，说明主题已安装，那个 app 本身不开放该状态给系统替换。
 
@@ -71,7 +71,7 @@ macOS 的鼠标颜色、对比度或某些应用自绘光标也可能覆盖 Mous
 
 ### Windows
 
-在安装包原来的文件夹中，右键 `restore-default.ps1`，选择 **Run with PowerShell**，然后注销/登录（若未立刻刷新）。这个脚本只移除该主题写入的 15 个当前用户鼠标角色；如果用户之后手动设置过其他鼠标方案，应改用 **控制面板 → 鼠标 → 指针** 选择想保留的方案，而不要运行恢复脚本。
+在安装包原来的文件夹中，右键 `restore-default.ps1`，选择 **Run with PowerShell**。它会移除该主题的登录启动项，恢复首次安装前保存的 15 个当前用户鼠标角色，并刷新当前会话。如果用户之后手动设置过其他鼠标方案，应改用 **控制面板 → 鼠标 → 指针** 选择想保留的方案，而不要运行恢复脚本。
 
 ## 制作者的最终回复格式
 

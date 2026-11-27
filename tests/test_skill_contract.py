@@ -87,6 +87,11 @@ class SkillContractTests(unittest.TestCase):
     def test_skill_documents_windows_theme_generation(self) -> None:
         content = SKILL_PATH.read_text(encoding="utf-8")
         self.assertIn("build_windows_cursor.py", content)
+        self.assertIn("CreateIconIndirect", content)
+        self.assertIn("SetSystemCursor", content)
+        self.assertIn("preview_source", content)
+        self.assertIn("128×128", content)
+        self.assertIn("same normalized artwork canvas", content)
         self.assertTrue(WINDOWS_BUILDER_PATH.is_file())
         self.assertTrue(WINDOWS_INSTALLATION_PATH.is_file())
 
